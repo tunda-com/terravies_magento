@@ -1,0 +1,14 @@
+<?php
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+?>
+<?php /**@var \Terravives\Fee\Block\Checkout\FeeData $block */ ?>
+    <?php $serializedCheckoutConfig = /* @noEscape */$block->serializeJson($block->getFeeData());;
+    $scriptString = <<<script
+        window.terravivesFeeData = {$serializedCheckoutConfig};
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+</div>

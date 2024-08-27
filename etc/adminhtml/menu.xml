@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Terravives_Fee::fees_wrapper" title="Terravives Fees" translate="title" module="Terravives_Fee" sortOrder="60" parent="Magento_Sales::sales"  resource="Terravives_Fee::fees_wrapper" />
+        <add id="Terravives_Fee::fees" title="Fees" translate="title" module="Terravives_Fee" sortOrder="75" parent="Terravives_Fee::fees_wrapper" action="terravives_fees/fees/index" resource="Terravives_Fee::fees" />
+    </menu>
+</config>

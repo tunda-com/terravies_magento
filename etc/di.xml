@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Terravives\Fee\Api\FeeManagementInterface" type="Terravives\Fee\Model\FeeManagement"/>
+    <preference for="Terravives\Fee\Api\GuestFeeManagementInterface" type="Terravives\Fee\Model\GuestFeeManagement"/>
+    <preference for="Terravives\Fee\Api\Data\FeeDetailsInterface" type="Terravives\Fee\Model\Fee\FeeDetails"/>
+    <preference for="Terravives\Fee\Api\Data\FeeDataInterface" type="Terravives\Fee\Model\FeeData"/>
+    <type name="Terravives\Fee\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Terravives\Fee\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customLogHandlerTerravives</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Terravives\Fee\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Quote\Model\Cart\TotalsConverter">
+        <plugin name="add_terravives_fee_details_to_terravives_fee_quote_total" type="Terravives\Fee\Plugin\Api\AddFeeDetailsToFeeQuoteTotalPlugin"/>
+    </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="terravives_add_fees_to_order" type="Terravives\Fee\Plugin\Api\AddFeesToOrderPlugin" />
+    </type>
+    <type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
+        <plugin name="terravives_add_fees_to_credit_memo" type="Terravives\Fee\Plugin\Api\AddFeesToCreditMemoPlugin"/>
+    </type>
+    <type name="Magento\Sales\Api\InvoiceRepositoryInterface">
+        <plugin name="terravives_add_fees_to_invoice" type="Terravives\Fee\Plugin\Api\AddFeesToInvoicePlugin"/>
+    </type>
+    <type name="Klarna\Core\Model\Api\Builder">
+        <plugin name="terravives_add_fees_to_klarna_request" type="Terravives\Fee\Plugin\Klarna\AddFeesAsSurcharge"/>
+    </type>
+    <type name="Klarna\Base\Model\Checkout\Orderline\Items\Surcharge">
+        <plugin name="terravives_fees_collect_fees_pre_purchase" type="Terravives\Fee\Plugin\Klarna\CheckoutExt\CollectFeesPrePurchasePlugin"/>
+        <plugin name="terravives_fees_collect_fees_post_purchase" type="Terravives\Fee\Plugin\Klarna\CheckoutExt\CollectFeesPostPurchasePlugin"/>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="terravives_fees_fee_listing_data_source" xsi:type="string">Terravives\Fee\Model\ResourceModel\Order\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="TerravivesFeesGridFilterPool"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TerravivesFeesFeeGridDataProvider"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">Magento\Sales\Model\ResourceModel\Order\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">TerravivesOrdersFeeGirdFilterPool</argument>
+        </arguments>
+    </virtualType>
+</config>

@@ -1,0 +1,25 @@
+<?php
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Terravives\Fee\Block\Adminhtml\Order\View\Info $block */
+?>
+
+<?php if ($fee = $block->getFeeDetails()) : ?>
+    <br><br>
+    <div class="admin__page-section-title"><span class="title"><?= $block->escapeHtml(__('Fees')) ?></span></div>
+    <div id="order-fee-details" class="admin__page-section-item">
+        <div class="admin__page-section-item-content">
+            <table>
+                <tr>
+                    <td>
+                        <strong><?= $block->escapeHtml($fee['fee_title']); ?></strong>
+                        <?= $block->escapeHtml($fee['fee_value']); ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+<?php endif; ?>

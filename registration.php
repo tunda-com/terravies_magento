@@ -1,0 +1,11 @@
+<?php
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+\Magento\Framework\Component\ComponentRegistrar::register(
+    \Magento\Framework\Component\ComponentRegistrar::MODULE,
+    'Terravives_Fee',
+    __DIR__
+);

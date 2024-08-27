@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <terravives_fees>
+            <main>
+                <enable_fees>0</enable_fees>
+                <show_fees_checkout>0</show_fees_checkout>
+                <fees_amount_placeholder>Enter your fee</fees_amount_placeholder>
+            </main>
+            <general>
+                <api_url>https://terravives.bluehat.al</api_url>
+            </general>
+        </terravives_fees>
+    </default>
+</config>

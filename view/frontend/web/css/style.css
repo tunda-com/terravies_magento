@@ -1,0 +1,65 @@
+#terravives-fee-form .fieldset {
+    margin: 5px 0 10px;
+}
+
+#terravives-fee-form strong span {
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.minimum_fee {
+    margin-top: -10px;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.default_description_fee {
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.42857143;
+    font-size: 1.4rem;
+}
+
+
+#terravives-fee-form .minimum_fee {
+    margin-bottom: 10px;
+}
+
+#terravives-fee-form fieldset {
+    margin-bottom: 10px;
+}
+
+/* compatibility with Amasty_JetTheme */
+.amasty-jet-theme .cart-summary #block-fee-wrapper {
+    margin-top: 30px;
+    margin-bottom: -20px;
+}
+
+.amasty-jet-theme .cart-summary #block-fee > .title {
+    cursor: pointer;
+}
+
+.amasty-jet-theme .cart-summary #block-fee > .title:after{
+    display: inline-block;
+    margin-left: 5px;
+    width: 20px;
+    height: 20px;
+    background: url(static/media/arrow-bottom.1c402be5.svg) no-repeat 100% / contain;
+    content: '';
+    vertical-align: middle;
+}
+
+.amasty-jet-theme .cart-summary #block-fee.active > .title:after {
+    transform: rotate(180deg);
+}
+
+.amasty-jet-theme .cart-summary #block-fee > .title > strong {
+    vertical-align: middle;
+    font-weight: 400;
+}
+
+@media all and (min-width: 1024px), print {
+    .amasty-jet-theme .opc-block-summary .amtheme-summary-content {
+        max-height: none;
+    }
+}

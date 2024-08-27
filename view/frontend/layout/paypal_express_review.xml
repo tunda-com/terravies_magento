@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Terravives. All rights reserved.
+ 
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Terravives_Fee::css/style.css"/>
+        <css src="Terravives_Fee::css/style-paypal.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Terravives\Fee\Block\Checkout\FeeData" name="terravives_checkout_fee_data"
+                   after="-" cacheable="false" template="Terravives_Fee::info/fee_data.phtml"/>
+        </referenceContainer>
+        <referenceBlock name="paypal.additional.actions">
+            <block class="Terravives\Fee\Block\PayPal\Express\Fee" name="checkout.paypal.express.fee" as="fee"
+                   template="paypal/express/fee_wrapper.phtml" after="paypal.cart.coupon">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="terravives-fee-form-container" xsi:type="array">
+                                <item name="component" xsi:type="string">Terravives_Fee/js/view/terravives-fee-form-paypal</item>
+                                <item name="provider" xsi:type="string">checkoutProvider</item>
+                                <item name="config" xsi:type="array">
+                                    <item name="template" xsi:type="string">Terravives_Fee/terravives-fee-form</item>
+                                </item>
+                                <item name="children" xsi:type="array">
+                                    <item name="terravives-fee-form-fieldset" xsi:type="array">
+                                        <item name="component" xsi:type="string">Terravives_Fee/js/form/components</item>
+                                        <item name="displayArea" xsi:type="string">terravives-fee-form-fields</item>
+                                        <item name="children" xsi:type="array">
+                                            <!-- Wee add fields in LayoutProccessor class -->
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                            <item name="checkoutProvider" xsi:type="array">
+                                <item name="component" xsi:type="string">uiComponent</item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

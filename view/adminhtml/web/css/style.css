@@ -1,0 +1,36 @@
+.head-fee {
+    margin-top: 20px;
+}
+
+.admin__page-section-title.head-fee.active > .title:after {
+    content: '\e62b';
+    margin-left: 10px;
+}
+
+.admin__page-section-title.head-fee > .title:after {
+    color: inherit;
+    content: '\e628';
+    font-family: 'Admin Icons';
+    vertical-align: middle;
+    font-weight: normal;
+    overflow: hidden;
+    speak: none;
+    text-align: center;
+    margin-left: 10px;
+}
+
+#fee_fee {
+    margin-top: 10px;
+}
+
+#fee_block_image {
+    float: left;
+}
+
+#fee_block_description {
+    margin-left: 5px;
+}
+
+#order-fee-details {
+    width: 200px;
+}

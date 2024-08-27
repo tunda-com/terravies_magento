@@ -1,0 +1,57 @@
+<!--
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+
+<!-- ko if: isEnableFees() -->
+<div id="terravives-fee-container" data-bind="blockLoader: isLoading">
+
+    <!-- ko if: isDisplayTitle() -->
+    <div class="title" data-role="title" role="tab" aria-selected="false" aria-expanded="false" tabindex="0">
+        <strong role="heading"></span>
+            <span data-bind="i18n: 'Fee'"></span>
+        </strong>
+    </div>
+    <!--/ko-->
+
+    <!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
+
+    <!-- ko if: isDisplayBlockDefaultFee() -->
+    <div class="default_description_fee">
+        <span data-bind="text: getDefaultFee()"></span>
+    </div>
+    <!--/ko-->
+    <div>
+        <form id="terravives-fee-form" class="form">
+            <div data-bind="visible: showButtonAdd()">
+                <fieldset class="fieldset">
+                    <!-- ko foreach: getRegion('terravives-fee-form-fields') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!--/ko-->
+                </fieldset>
+                <button type="button" data-bind="click: onSubmitAdd" class="action">
+                    <span data-bind="i18n: 'Add Fee'"></span>
+                </button>
+            </div>
+
+            <div data-bind="visible: showButtonDelete()">
+                <div class="title" data-role="title" role="tab" aria-selected="false" aria-expanded="false"
+                     tabindex="0">
+                    <strong role="heading">
+                        <span data-bind="i18n: 'Fee'"></span>
+                        <span data-bind="text: getValueFee()"></span>
+                        <span data-bind="i18n: 'was added to your order total'"></span>
+                    </strong>
+                </div>
+                <button type="button" data-bind="click: onSubmitDelete" class="action">
+                    <span data-bind="i18n: 'Remove Fee'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /ko -->

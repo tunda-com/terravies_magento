@@ -1,0 +1,34 @@
+<?php
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+?>
+<?php /**@var Terravives\Fee\Block\Cart\Fee $block */ ?>
+
+<?php if ($block->showFeesTab()) : ?>
+    <div id="block-fee-wrapper">
+        <div id="block-fee" class="block"
+             data-mage-init='{"collapsible":{"openedState": "active", "saveState": true}}'>
+            <div class="title" data-role="title">
+                <strong id="block-fee-heading" role="heading" aria-level="2">
+                    <?= $block->escapeHtml(__('Fee')) ?>
+                </strong>
+            </div>
+            <div id="block-fee-summary" data-bind="scope:'terravives-fee-form-container'" class="content"
+                 data-role="content" aria-labelledby="block-fee-heading">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <script type="text/x-magento-init">
+                    {
+                        "#block-fee": {
+                            "Magento_Ui/js/core/app": <?= /** @noEscape */ $block->getJsLayout(); ?>
+                        }
+                    }
+
+                </script>
+            </div>
+        </div>
+    </div>
+
+
+<?php endif; ?>

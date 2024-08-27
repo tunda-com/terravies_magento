@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Terravives. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <!--Add Fee to Cart-->
+    <!--Example
+    "feeData": {
+        "amount": 15,
+        "round_up": false,
+    }
+    -->
+    <route url="/V1/mw-fees/carts/:cartId/fee" method="PUT">
+        <service class="Terravives\Fee\Api\FeeManagementInterface" method="addToCart"/>
+        <resources>
+            <resource ref="Terravives_Fee::Fee"/>
+        </resources>
+    </route>
+
+    <!--Add Fee to Cart for Customer-->
+    <route url="/V1/mw-fees/carts/mine/fee" method="PUT">
+        <service class="Terravives\Fee\Api\FeeManagementInterface" method="addToCart"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <!--Add Fee to Cart for Guest-->
+    <route url="/V1/mw-fees/carts/guest-carts/:cartId/fee" method="PUT">
+        <service class="Terravives\Fee\Api\GuestFeeManagementInterface" method="addToCart"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

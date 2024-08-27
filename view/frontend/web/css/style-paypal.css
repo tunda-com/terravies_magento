@@ -1,0 +1,8 @@
+#terravives-fee-container .field {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#terravives-fee-container .admin__field, #terravives-fee-container .action {
+    margin-bottom: 10px;
+}
