@@ -32,7 +32,7 @@ Terravives custom Fee
 
  - Fee Amount Placeholder (terravives_fees/main/fees_amount_placeholder)
 
- - Api Key (terravives_fees/general/api_url)
+ - Api Url (terravives_fees/general/api_url)
 
  - Api Key (terravives_fees/general/api_key)
 
