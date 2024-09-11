@@ -133,7 +133,6 @@ class FeeData extends \Magento\Payment\Block\Form
 
         $storeId  = $this->_storeManager->getStore()->getId();
         $result['is_enable'] = $this->helperData->showFeesTab($storeId);
-        customlog( isset($feeDetails['compensations']));
         
         if (!isset($feeDetails['compensations'])) {
             $result['is_enable'] = false;
@@ -154,7 +153,6 @@ class FeeData extends \Magento\Payment\Block\Form
             $this->helperFee->getQuote()->getQuoteCurrencyCode()
         );
 
-        customlog($result);
         return $result;
     }
 
