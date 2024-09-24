@@ -13,6 +13,7 @@
                 <enable_fees>0</enable_fees>
                 <show_fees_checkout>0</show_fees_checkout>
                 <fees_amount_placeholder>Enter your fee</fees_amount_placeholder>
+                <default_option>max</default_option>
             </main>
             <general>
                 <api_url>https://terravives.bluehat.al</api_url>
@@ -20,3 +21,4 @@
         </terravives_fees>
     </default>
 </config>
+
