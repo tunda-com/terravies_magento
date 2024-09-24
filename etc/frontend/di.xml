@@ -28,4 +28,16 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="cms_block_config_provider" xsi:type="object">Terravives\Fee\Model\ConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Terravives\Fee\Model\ConfigProvider">
+        <arguments>
+            <argument name="blockId" xsi:type="string">checkout_terravives_fee</argument>
+        </arguments>
+    </type>
 </config>

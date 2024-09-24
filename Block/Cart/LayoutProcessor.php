@@ -150,8 +150,8 @@ class LayoutProcessor implements LayoutProcessorInterface
                 $fieldSetPointer[] = $component;
             }
         }
-        
-        
+
+
         if (isset(
             $jsLayout['components']['checkout']['children']['sidebar']['children']
             ['summary']['children']['itemsBefore']['children']
@@ -180,13 +180,13 @@ class LayoutProcessor implements LayoutProcessorInterface
 
         $components = [];
 
-        if ($this->helperData->showFeesTab()
-        ) {
+        if ($this->helperData->showFeesTab()) {
 
             $optionFromApi = $this->getCompensations();
 
             if ($optionFromApi && isset($optionFromApi['compensations'])) {
-                $components[] = $this->getPredefinedFeeSelectComponent($optionFromApi);
+                $defaultOption = $this->helperData->getDefaultOption();
+                $components[] = $this->getPredefinedFeeSelectComponent($optionFromApi, $defaultOption );
                 $components[] = $this->getInputComponent();
             }
         }
@@ -199,7 +199,7 @@ class LayoutProcessor implements LayoutProcessorInterface
      *
      * @return array
      */
-    protected function getPredefinedFeeSelectComponent($optionFromApi)
+    protected function getPredefinedFeeSelectComponent($optionFromApi, $defaultOption = false)
     {
         $component               = [];
         $component['component']  = 'Terravives_Fee/js/form/element/select';
@@ -215,19 +215,46 @@ class LayoutProcessor implements LayoutProcessorInterface
         $component['sortOrder']  = 5;
 
         $options = [];
-        
+
+        $sortedCompensations = [];
         if (is_array($optionFromApi['compensations'])) {
-            foreach ($optionFromApi['compensations'] as $value) {
+            $count = count($optionFromApi['compensations']);
+
+            foreach ($optionFromApi['compensations'] as $key =>  $value) {
                 if (is_null($value['amount'])) {
                     $value['amount'] = 'custom_fee';
                 }
-                $options[] =
+                if ($value['amount'] != 0  && $value['amount'] != 'custom_fee') {
+                    $sortedCompensations[$key] = $value['amount'];
+                }
+
+                $options[$key] =
                     [
                         'label' => $value['title'],
                         'value' => $value['amount'],
                         'hash' => $value['hash'],
                     ];
             }
+        }
+
+        $sort = false;
+        if($defaultOption) {
+            if ($defaultOption == 'min') {
+                asort($sortedCompensations);
+                $sort = true;
+            } elseif ($defaultOption == 'max') {
+                arsort($sortedCompensations);
+                $sort = true;
+            }
+        }
+
+        if ($sort) {
+            $sortedOptions = [];
+            foreach($sortedCompensations as $key => $value) {
+                $sortedOptions[$key] = $options[$key];
+                unset($options[$key]);
+            }
+            $options = array_merge($sortedOptions, $options);
         }
 
         $component['options'] = $options;
@@ -241,7 +268,7 @@ class LayoutProcessor implements LayoutProcessorInterface
 
         $fee = $this->feeHelper->getFee();
         $quote = $this->feeHelper->getQuote();
-        if (false && $fee && isset($fee['last_total']) && isset($fee['compensations']) && $fee['last_total'] == $quote->getSubtotal()) {
+        if ($fee && isset($fee['last_total']) && isset($fee['compensations']) && $fee['last_total'] == $quote->getSubtotal()) {
             return $fee;
         }
 

@@ -19,8 +19,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const FEE_TAX_CALCULATION_INCLUDES_TAX = 'terravives_fees/main/tax_calculation_includes_tax';
     const SHOW_FEES_ADMIN                  = 'terravives_fees/main/show_fees_admin';
     const DEFAULT_DESCRIPTION              = 'terravives_fees/main/default_description_fees';
+    const DEFAULT_OPTION                   = 'terravives_fees/main/default_option';
     const AMOUNT_PLACEHOLDER               = 'terravives_fees/main/fees_amount_placeholder';
-
     const ENABLE_PRODUCT_DATA              = 'terravives_fees/general/add_product_data';
     const ENABLE_PRODUCT_CATEGORY          = 'terravives_fees/general/add_product_categories';
 
@@ -88,20 +88,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @return bool
      */
-    public function isShowFeeAdmin($storeId = null)
-    {
-        return $this->scopeConfig->isSetFlag(
-            self::SHOW_FEES_ADMIN,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-    }
-
-    /**
-     * @param null|int $storeId
-     *
-     * @return bool
-     */
     public function shouldAddProductData($storeId = null)
     {
         return $this->scopeConfig->isSetFlag(
@@ -135,6 +121,22 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return (string)$this->scopeConfig->getValue(
             self::DEFAULT_DESCRIPTION,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * Get default option
+     *
+     * @param null|string $storeId
+     *
+     * @return string
+     */
+    public function getDefaultOption($storeId = null): string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::DEFAULT_OPTION,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

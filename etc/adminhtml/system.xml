@@ -32,6 +32,11 @@
                        showInWebsite="1" showInStore="1">
                             <label><![CDATA[Fee Amount Placeholder]]></label>
                      </field>
+                    <field id="default_option" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                      <label>Default Option</label>
+                      <comment/>
+                      <source_model>Terravives\Fee\Model\Config\Source\DefaultOption</source_model>
+                    </field>
               </group>
               <group id="general" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
                      <label>API Configuration</label>
