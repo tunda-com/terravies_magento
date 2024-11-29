@@ -35,9 +35,4 @@
             </argument>
         </arguments>
     </type>
-    <type name="Terravives\Fee\Model\ConfigProvider">
-        <arguments>
-            <argument name="blockId" xsi:type="string">checkout_terravives_fee</argument>
-        </arguments>
-    </type>
 </config>

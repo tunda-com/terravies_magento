@@ -1,6 +1,6 @@
 /**
  * Copyright © Terravives. All rights reserved.
- 
+
  */
 
 /*
@@ -44,8 +44,8 @@ define([
 
         initialize: function () {
             this._super();
-            this.showButtonAdd = ko.observable(this.defaultShowButtonAdd);
-
+            this.showButtonAdd = ko.observable(this.defaultShowButtonAdd());
+            this.showButtonDelete = ko.observable(!this.defaultShowButtonAdd());
             /* default initialize */
             var valueFee = fee.allData().fee;
             var formatPrice = priceUtils.formatPrice(valueFee, fee.allData().price_format);
@@ -68,7 +68,7 @@ define([
             if (!this.source.get('params.invalid')) {
                 isLoading(true);
                 var formData = [];
-                
+
                 if (this.source.get('predefinedFee') == 'custom_fee') {
                     formData['fee'] = this.source.get('terravivesFeeForm');
                 } else {

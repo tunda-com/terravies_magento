@@ -14,10 +14,11 @@ class ApiHelper extends AbstractHelper
 	const API_BASE_URL            = 'terravives_fees/general/api_url';
 	const API_BASE_KEY            = 'terravives_fees/general/api_key';
 
-	const ENDPOINT_MAPPING_ELEMENTS = '/api/v1/GetProductMappingElements';
-	const ENDPOINT_LOAD_OPTIONS = '/api/v1/LoadOptions';
-	const ENDPOINT_COMPENSATION_ORDER = '/api/v1/CreateCompensationOrder';
-	const ENDPOINT_CHECKOUT = '/api/v1/OrderCheckout';
+	const ENDPOINT_MAPPING_ELEMENTS = '/api/v1/mapping/categories';
+	const ENDPOINT_LOAD_OPTIONS = '/api/v1/options/by-cart';
+	const ENDPOINT_COMPENSATION_ORDER = '/api/v1/order/create';
+	const ENDPOINT_CHECKOUT = '/api/v1/order/checkout';
+    const ENDPOINT_DISCLAIMER = '/api/v1/disclaimer';
 
     /**
      * @var \Magento\Framework\Encryption\EncryptorInterface
@@ -76,6 +77,11 @@ class ApiHelper extends AbstractHelper
         return $this->request('POST', self::ENDPOINT_CHECKOUT, ['json' => $options]);
     }
 
+    public function getDisclaimer()
+    {
+        return $this->request('GET', self::ENDPOINT_DISCLAIMER);
+    }
+
     /**
      * Get api base url
      *
@@ -110,7 +116,7 @@ class ApiHelper extends AbstractHelper
     private function request(string $method, string $endpoint, array $options = [])
     {
         try {
-            
+
             $url = $this->getBaseUrl() . $endpoint;
             $method = strtoupper($method);
 
@@ -118,7 +124,6 @@ class ApiHelper extends AbstractHelper
 
             return $this->executeCurlRequest($curlOptions);
         } catch (\Exception $e) {
-            // dd($this->_logger);
             $this->_logger->error( $endpoint . ' - ' . $e->getMessage());
             return false;
         }
@@ -158,7 +163,7 @@ class ApiHelper extends AbstractHelper
         return $curlOptions;
     }
 
-    private function executeCurlRequest(array $curlOptions): array
+    private function executeCurlRequest(array $curlOptions): mixed
     {
         $curlHandle = curl_init();
 
@@ -181,6 +186,16 @@ class ApiHelper extends AbstractHelper
 
         curl_close($curlHandle);
 
+        if (!$this->isJson($response)) {
+            return $response;
+        }
+
         return $this->serializer->unserialize($response);
+    }
+
+    public function isJson($string)
+    {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
     }
 }

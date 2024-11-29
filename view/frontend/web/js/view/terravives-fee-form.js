@@ -44,8 +44,8 @@ define([
 
         initialize: function () {
             this._super();
-            this.showButtonAdd = ko.observable(this.defaultShowButtonAdd);
-            this.showButtonDelete = ko.observable();
+            this.showButtonAdd = ko.observable(this.defaultShowButtonAdd());
+            this.showButtonDelete = ko.observable(!this.defaultShowButtonAdd());
 
             /* default initialize */
             var valueFee = fee.allData().fee;

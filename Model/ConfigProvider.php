@@ -2,6 +2,7 @@
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\LayoutInterface;
+use Magento\Framework\View\Asset\Repository;
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -9,22 +10,36 @@ class ConfigProvider implements ConfigProviderInterface
     protected $_layout;
     protected $cmsBlock;
 
-    public function __construct(LayoutInterface $layout, $blockId)
+    protected $apiHelper;
+
+    protected $assetRepo;
+
+    public function __construct(
+        LayoutInterface $layout,
+        \Terravives\Fee\Helper\ApiHelper $apiHelper,
+        Repository $assetRepo
+    )
     {
         $this->_layout = $layout;
-        $this->cmsBlock = $this->constructBlock($blockId);
-    }
-
-    public function constructBlock($blockId){
-        $block = $this->_layout->createBlock('Magento\Cms\Block\Block')
-            ->setBlockId($blockId)->toHtml();
-        return $block;
+        $this->apiHelper = $apiHelper;
+        $this->assetRepo = $assetRepo;
     }
 
     public function getConfig(): array
     {
+        $url = '#';
+        if($urlFromApi = $this->apiHelper->getDisclaimer()){
+            $url = $urlFromApi;
+        }
         return [
-            'terravives_block' => $this->cmsBlock
+            'terravives_block' => '<div class="terravives-terms-conditions"><img  src=' . $this->getImageUrl() .' alt="Logo" style="height:30px">
+                                    <a href=' . $url .' target="_blank">' . __('Our Terms and conditions') . '</a>
+                                  </div>'
         ];
+    }
+
+    public function getImageUrl()
+    {
+        return $this->assetRepo->getUrl('Terravives_Fee::images/logo-nero.png');
     }
 }
