@@ -146,7 +146,14 @@ class Fee implements FeeInterface
         $address = $quote->getIsVirtual() ? $quote->getBillingAddress() : $quote->getShippingAddress();
 
         if ($address) {
-            $address->setTerravivesFeeDetails(null);
+            $data = $address->getTerravivesFeeDetails();
+            if ($data && $data !== "") {
+                $data = $this->serializer->unserialize($data);
+                unset($data['fee']);
+                unset($data['project_id']);
+                $data = $this->serializer->serialize($data);
+            }
+            $address->setTerravivesFeeDetails($data);
         }
     }
 

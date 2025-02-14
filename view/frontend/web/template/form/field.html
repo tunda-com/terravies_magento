@@ -14,12 +14,12 @@
 
         <!-- ko if: element.hasAddons() -->
         <div class="control-addon">
-            <!-- ko template: element.elementTmpl --><!-- /ko -->
-
             <!-- ko if: element.addbefore -->
             <label class="addon-prefix" data-bind="attr: { for: element.uid }"><span
-                    data-bind="text: element.addbefore"></span></label>
+                data-bind="text: element.addbefore"></span></label>
             <!-- /ko -->
+
+            <!-- ko template: element.elementTmpl --><!-- /ko -->
 
             <!-- ko if: element.addafter -->
             <label class="addon-suffix" data-bind="attr: { for: element.uid }"><span
@@ -33,6 +33,37 @@
             <span data-bind="text: element.notice"></span>
         </div>
         <!-- /ko -->
+
+        <div class="select-project">
+            <!-- ko if: imagePath() -->
+            <img class="project-image" width="75px" height="75px" data-bind="attr:{src: imagePath()}"/>
+            <!-- /ko -->
+
+            <div class="project-info">
+                <!-- ko if: getProjectDescription() -->
+                <p class="project-title" data-bind="text: getProjectDescription()"></p>
+                <!-- /ko -->
+
+                <!-- ko if: getUrl() -->
+                    <a data-trigger="trigger">
+                        <span data-bind="i18n: 'Read More'"></span>
+                    </a>
+                    <div data-bind="mageInit: {
+                            'Magento_Ui/js/modal/modal':{
+                                'type': 'popup',
+                                'modalClass':'project-iframe',
+                                'title': false,
+                                'trigger': '[data-trigger=trigger]',
+                                'responsive': true,
+                                'buttons': false
+                            }}">
+                        <div class="content">
+                            <iframe data-bind="attr: { src: getUrl() }, title: $t('Read More')"></iframe>
+                        </div>
+                    </div>
+                <!-- /ko -->
+            </div>
+        </div>
 
         <!-- ko if: element.tooltip -->
         <!-- ko template: element.tooltipTpl --><!-- /ko -->

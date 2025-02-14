@@ -7,12 +7,22 @@
 /** @var Terravives\Fee\Block\Adminhtml\Order\View\Info $block */
 ?>
 
-<?php if ($fee = $block->getFeeDetails()) : ?>
+<?php
+if ($fee = $block->getFeeDetails()) : ?>
     <br><br>
     <div class="admin__page-section-title"><span class="title"><?= $block->escapeHtml(__('Fees')) ?></span></div>
     <div id="order-fee-details" class="admin__page-section-item">
         <div class="admin__page-section-item-content">
             <table>
+                <?php if ($fee['has_project']) : ?>
+                    <tr>
+                        <td>
+                            <a href="<?= $fee['project_url'] ?>" target="_blank">
+                                <?= $block->escapeHtml($fee['project_title']); ?>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endif; ?>
                 <tr>
                     <td>
                         <strong><?= $block->escapeHtml($fee['fee_title']); ?></strong>
@@ -22,4 +32,5 @@
             </table>
         </div>
     </div>
-<?php endif; ?>
+<?php
+endif; ?>

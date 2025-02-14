@@ -187,6 +187,13 @@ class LayoutProcessor implements LayoutProcessorInterface
             if ($optionFromApi && isset($optionFromApi['compensations'])) {
                 $defaultOption = $this->helperData->getDefaultOption();
                 $components[] = $this->getPredefinedFeeSelectComponent($optionFromApi, $defaultOption );
+                if (isset($optionFromApi['projects'])) {
+                    $selectedOption =false;
+                    if(isset($optionFromApi['project_id'])) {
+                        $selectedOption = $optionFromApi['project_id'];
+                    }
+                    $components[] = $this->getProjectsComponent($optionFromApi, $selectedOption);
+                }
                 $components[] = $this->getInputComponent();
             }
         }
@@ -213,13 +220,12 @@ class LayoutProcessor implements LayoutProcessorInterface
         $component['visible']    = true;
         $component['validation'] = [];
         $component['sortOrder']  = 5;
+        $component['addbefore']      = $this->helperData->getFeeLabel();
 
         $options = [];
 
         $sortedCompensations = [];
         if (is_array($optionFromApi['compensations'])) {
-            $count = count($optionFromApi['compensations']);
-
             foreach ($optionFromApi['compensations'] as $key =>  $value) {
                 if (is_null($value['amount'])) {
                     $value['amount'] = 'custom_fee';
@@ -238,23 +244,23 @@ class LayoutProcessor implements LayoutProcessorInterface
         }
 
         $sort = false;
+        $selectedOption = false;
         if($defaultOption) {
             if ($defaultOption == 'min') {
                 asort($sortedCompensations);
-                $sort = true;
+                $selectedOption = reset($sortedCompensations);
             } elseif ($defaultOption == 'max') {
                 arsort($sortedCompensations);
-                $sort = true;
+                $selectedOption = reset($sortedCompensations);
+            }elseif ($defaultOption == 'median') {
+                asort($sortedCompensations);
+                $position= array_keys($sortedCompensations)[round(count($sortedCompensations)/2)] - 1;
+                $selectedOption = $sortedCompensations[$position];
             }
         }
 
-        if ($sort) {
-            $sortedOptions = [];
-            foreach($sortedCompensations as $key => $value) {
-                $sortedOptions[$key] = $options[$key];
-                unset($options[$key]);
-            }
-            $options = array_merge($sortedOptions, $options);
+        if ($selectedOption) {
+            $component['value'] = $selectedOption;
         }
 
         $component['options'] = $options;
@@ -262,10 +268,53 @@ class LayoutProcessor implements LayoutProcessorInterface
         return $component;
     }
 
+        /**
+     * Get predefine fee Component
+     *
+     * @return array
+     */
+    protected function getProjectsComponent($optionFromApi, $selectedOption = false)
+    {
+        $component               = [];
+        $component['component']  = 'Terravives_Fee/js/form/element/select';
+        $component['config']     = [
+            'customScope' => 'terravivesFeeForm',
+            'template'    => 'Terravives_Fee/form/field',
+            'elementTmpl' => 'ui/form/element/select'
+        ];
+        $component['dataScope']  = 'predefinedProjects';
+        $component['provider']   = 'checkoutProvider';
+        $component['visible']    = true;
+        $component['required']   = true;
+        $component['validation'] = [
+            'required-entry' => true
+        ];
+        $component['sortOrder']  = 5;
+        $component['addbefore']      = $this->helperData->getProjectLabel();
+
+        if ($selectedOption) {
+            $component['value'] = $selectedOption;
+        }
+
+        $options = [];
+
+        if (is_array($optionFromApi['projects'])) {
+            foreach ($optionFromApi['projects'] as $key => $value) {
+                $options[] = [
+                    'label' => $value['title'],
+                    'value' => $value['id'],
+                ];
+            }
+        }
+
+        $component['options'] = $options;
+
+        return $component;
+    }
+
+
     public function getCompensations()
     {
-        $optionFromApi = [];
-
         $fee = $this->feeHelper->getFee();
         $quote = $this->feeHelper->getQuote();
         if ($fee && isset($fee['last_total']) && isset($fee['compensations']) && $fee['last_total'] == $quote->getSubtotal()) {
@@ -373,36 +422,6 @@ class LayoutProcessor implements LayoutProcessorInterface
 
         if (!empty($feeData['fee'])) {
             $component['value'] = $this->escaper->escapeHtml($feeData['fee']);
-        }
-
-        return $component;
-    }
-
-    /**
-     * Get Input Component
-     *
-     * @return array
-     */
-    protected function getHiddenInputsComponent($optionFromApi)
-    {
-        $component              = [];
-        $component['component'] = 'Magento_Ui/js/form/element/abstract';
-        $component['config']    = [
-            'customScope' => 'terravivesFeeForm',
-            'template'    => 'Terravives_Fee/form/input',
-            'elementTmpl' => 'ui/form/element/input',
-        ];
-
-        $component['dataScope'] = 'cart_uuid';
-        $component['provider']  = 'checkoutProvider';
-
-        $component['visible'] = false;
-
-        $component['validation']  = [];
-        $component['sortOrder']   = 10;
-
-        if ($optionFromApi['cart_uuid']) {
-            $component['value'] = $optionFromApi['cart_uuid'];
         }
 
         return $component;

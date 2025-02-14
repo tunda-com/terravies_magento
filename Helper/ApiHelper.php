@@ -184,6 +184,12 @@ class ApiHelper extends AbstractHelper
             throw new \Exception("HTTP error ({$httpCode}): {$errorMsg}");
         }
 
+        if (isset($response['status']) && $response['status'] === 'error') {
+            $errorMsg = $response['message'];
+            curl_close($curlHandle);
+            throw new \Exception("HTTP error ({$httpCode}): {$errorMsg}");
+        }
+
         curl_close($curlHandle);
 
         if (!$this->isJson($response)) {

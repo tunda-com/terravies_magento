@@ -1,7 +1,8 @@
 define([
     'ko',
+    'Terravives_Fee/js/model/fee',
     'Magento_Ui/js/form/element/select'
-], function (ko, Select) {
+], function (ko, fee, Select) {
     'use strict';
 
     var hasImage = ko.observable(false);
@@ -10,28 +11,34 @@ define([
 
         hasImage: hasImage,
 
-        getCharityDescription: function () {
+        getProjectDescription: function () {
             var value = this.value(),
-                uiElements = require('uiRegistry').get('component = Terravives_Fee/js/form/element/select').options();
+                projects = fee.allData().projects;
 
-            for (var index = 0; index < uiElements.length; ++index) {
-                if (uiElements[index]['value'] == value) {
-                    return uiElements[index]['notice'];
-                }
+            if(value in projects) {
+                return projects[value]['short_description'];
             }
         },
 
         imagePath: function () {
             var value = this.value(),
-                uiElements = require('uiRegistry').get('component = Terravives_Fee/js/form/element/select').options();
+                projects = fee.allData().projects;
 
             hasImage(false);
-            for (var index = 0; index < uiElements.length; ++index) {
-                if (uiElements[index]['value'] == value) {
-                    hasImage(true);
-                    return uiElements[index]['path'];
-                }
+            if(value in projects) {
+                hasImage(true);
+                return projects[value]['cover_url'];
+            }
+        },
+
+        getUrl: function () {
+            var value = this.value(),
+                projects = fee.allData().projects;
+
+            if(value in projects) {
+                return projects[value]['url'];
             }
         }
+
     });
 });

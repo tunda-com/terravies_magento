@@ -75,6 +75,10 @@ define([
                     formData['fee'] = this.source.get('predefinedFee');
                 }
 
+                if (this.source.get('predefinedProjects')) {
+                    formData['project'] = this.source.get('predefinedProjects');
+                }
+
                 applyFeeAction(formData, isLoading);
             } else {
                 messageContainer.addErrorMessage({'message': errorMessage});
@@ -93,6 +97,8 @@ define([
                 isLoading(true);
                 var formData = [];
                 formData['fee'] = this.source.get('terravivesFeeForm');
+                formData['project'] = this.source.get('predefinedProjects');
+
 
                 deleteFeeAction(formData, isLoading);
             } else {
@@ -112,6 +118,8 @@ define([
                 isLoading(true);
                 var formData = [];
                 formData['fee'] = this.source.get('terravivesFeeForm');
+                formData['project'] = this.source.get('terravivesFeeForm');
+
 
             } else {
                 messageContainer.addErrorMessage({'message': errorMessage});

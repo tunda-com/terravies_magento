@@ -14,12 +14,12 @@
 
         <!-- ko if: element.hasAddons() -->
         <div class="control-addon">
-            <!-- ko template: element.elementTmpl --><!-- /ko -->
-
             <!-- ko if: element.addbefore -->
             <label class="addon-prefix" data-bind="attr: { for: element.uid }"><span
-                    data-bind="text: element.addbefore"></span></label>
+                data-bind="text: element.addbefore"></span></label>
             <!-- /ko -->
+
+            <!-- ko template: element.elementTmpl --><!-- /ko -->
 
             <!-- ko if: element.addafter -->
             <label class="addon-suffix" data-bind="attr: { for: element.uid }"><span

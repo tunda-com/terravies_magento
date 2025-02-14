@@ -12,6 +12,9 @@
             <main>
                 <enable_fees>0</enable_fees>
                 <show_fees_checkout>0</show_fees_checkout>
+                <fee_input_label>Select Fee</fee_input_label>
+                <button_text>Donate</button_text>
+                <project_input_label>Select Project</project_input_label>
                 <fees_amount_placeholder>Enter your fee</fees_amount_placeholder>
                 <default_option>max</default_option>
             </main>

@@ -1,0 +1,149 @@
+// /**
+//  * Copyright © Magento, Inc. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+
+    #terravives-fee-container {
+        & > .title {
+            border-bottom: 1px solid #cccccc;
+            padding: 10px 0;
+            display: block;
+            text-decoration: none;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .default_description_fee {
+            margin-bottom: 15px;
+        }
+
+        .fieldset {
+            margin: 0 0 5px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .action {
+            margin-bottom: 15px;
+            display: block;
+            width: 100%;
+        }
+    }
+
+    .select-project {
+        display: flex;
+        align-items: center;
+
+        .project-image {
+            max-width: 75px;
+            height: 100%;
+            margin-right: 12px;
+            padding: 10px 0;
+        }
+
+        .project-info {
+            p {
+                padding: 10px 0 0;
+                margin: 0 !important;
+            }
+    
+            a {
+                text-decoration: underline;
+                font-size: 90%;
+                cursor: pointer;
+            }
+        }
+    }    
+
+    .project-iframe {
+        iframe {
+            width: 100%;
+            min-height: 50vh;
+            border: 0 none;
+            overflow-x: hidden;
+        }
+    }
+
+    .terravives-terms-conditions {
+        display: flex;
+        align-items: center;
+        margin: 0 0 15px;
+
+        img {
+            margin-right: 12px;
+        }
+    }
+    
+    /* compatibility with Amasty_JetTheme */
+    .amasty-jet-theme .cart-summary #block-fee-wrapper {
+        margin-top: 30px;
+        margin-bottom: -20px;
+    }
+    
+    .amasty-jet-theme .cart-summary #block-fee > .title {
+        cursor: pointer;
+    }
+    
+    .amasty-jet-theme .cart-summary #block-fee > .title:after{
+        display: inline-block;
+        margin-left: 5px;
+        width: 20px;
+        height: 20px;
+        background: url(static/media/arrow-bottom.1c402be5.svg) no-repeat 100% / contain;
+        content: '';
+        vertical-align: middle;
+    }
+    
+    .amasty-jet-theme .cart-summary #block-fee.active > .title:after {
+        transform: rotate(180deg);
+    }
+    
+    .amasty-jet-theme .cart-summary #block-fee > .title > strong {
+        vertical-align: middle;
+        font-weight: 400;
+    }
+    
+    @media all and (min-width: 1024px), print {
+        .amasty-jet-theme .opc-block-summary .amtheme-summary-content {
+            max-height: none;
+        }
+    }
+
+    /* Paypal */
+    #terravives-fee-container .field {
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    #terravives-fee-container .admin__field, 
+    #terravives-fee-container .action {
+        margin-bottom: 10px;
+    }
+
+}
+
+//
+//  Mobile
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+
+}
+
+//
+//  Desktop
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+
+}

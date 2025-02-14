@@ -1,66 +1,64 @@
-## Main Functionalities
-Terravives custom Fee
+# Terravives Custom Fee Module
 
 ## Installation
-\* = in production please use the `--keep-generated` option
 
-### Type 1: Zip file
+1. **Unzip the Module:**
+   - Extract the contents of the zip file into `app/code/Terravives`.
 
- - Unzip the zip file in `app/code/Terravives`
- - Enable the module by running `php bin/magento module:enable Terravives_Fee`
- - Apply database updates by running `php bin/magento setup:upgrade`\*
- - Flush the cache by running `php bin/magento cache:flush`
+2. **Enable the Module:**
+   - Run the following command to enable the module:  
+     ```bash
+     php bin/magento module:enable Terravives_Fee
+     ```
 
-### Type 2: Composer
+3. **Apply Database Updates:**
+   - Execute the following command to apply any necessary database updates:  
+     ```bash
+     php bin/magento setup:upgrade
+     ```
 
- - Make the module available in a composer repository for example:
-    - private repository `repo.magento.com`
-    - public repository `packagist.org`
-    - public github repository as vcs
- - Add the composer repository to the configuration by running `composer config repositories.repo.magento.com composer https://repo.magento.com/`
- - Install the module composer by running `composer require terravives/module-fee`
- - enable the module by running `php bin/magento module:enable Terravives_Fee`
- - apply database updates by running `php bin/magento setup:upgrade`\*
- - Flush the cache by running `php bin/magento cache:flush`
+4. **Flush Cache:**
+   - Flush the Magento cache by running:  
+     ```bash
+     php bin/magento cache:flush
+     ```
 
+---
 
 ## Configuration
 
- - Accept Fees (terravives_fees/main/enable_fees)
+You can configure the module through the Magento Admin Panel under the `Stores > Configuration > Terravives Fee` section.
 
- - Default Description (terravives_fees/main/default_description_fees)
+- **Enable Fees (`terravives_fees/main/enable_fees`):**  
+  Enable or disable the custom fee functionality.
 
- - Fee Amount Placeholder (terravives_fees/main/fees_amount_placeholder)
+- **Default Description (`terravives_fees/main/default_description_fees`):**  
+  Set the default description that will appear alongside the fee in the checkout process.
 
- - Api Url (terravives_fees/general/api_url)
+- **Fee Amount Placeholder (`terravives_fees/main/fees_amount_placeholder`):**  
+  Define the placeholder text for the fee amount input field.
 
- - Api Key (terravives_fees/general/api_key)
+- **API Url (`terravives_fees/general/api_url`):**  
+  Set the API endpoint URL for interacting with Terravives.
 
- - Add Product Data (terravives_fees/general/add_product_data)
+- **API Key (`terravives_fees/general/api_key`):**  
+  Enter the API key for authenticating with the Terravives API.
 
- - Add Product Categories (terravives_fees/general/add_product_categories)
+- **Add Product Data (`terravives_fees/general/add_product_data`):**  
+  Enable this option to include product details in the API call.  
+  **Note:** We do not recommend enabling this option as it can slow down the API response time.
 
+- **Add Product Categories (`terravives_fees/general/add_product_categories`):**  
+  Enable this option to include product categories in the API call.  
+  **Note:** Similar to adding product data, enabling this option may cause slower performance and is not recommended for most use cases.
 
-## Attributes
+---
 
- - Sales - terravives_fee_invoiced (terravives_fee_invoiced)
+## Checkout and Donation Feature
 
- - Sales - base_terravives_fee_invoiced (base_terravives_fee_invoiced)
+- The **Terravives Custom Fee** allows customers to make a donation to a charity project during checkout. They can select the project they wish to donate to and view the total amount of their donation.
+- Every client must configure the API connection by entering the API URL and API Key in the configuration settings.
 
- - Sales - terravives_fee_refunded (terravives_fee_refunded)
+**Important:**  
+If you choose to include product information in the API call (by enabling `Add Product Data` and `Add Product Categories`), please be aware that this may slow down the response time and affect the checkout process performance.
 
- - Sales - base_terravives_fee_refunded (base_terravives_fee_refunded)
-
- - Sales - terravives_fee_cancelled (terravives_fee_cancelled)
-
- - Sales - base_terravives_fee_cancelled (base_terravives_fee_cancelled)
-
- - Sales - terravives_fee_amount (terravives_fee_amount)
-
- - Sales - base_terravives_fee_amount (base_terravives_fee_amount)
-
- - Sales - terravives_fee_tax_amount (terravives_fee_tax_amount)
-
- - Sales - base_terravives_fee_tax_amount (base_terravives_fee_tax_amount)
-
- - Sales - terravives_fee_details (terravives_fee_details)

@@ -27,7 +27,7 @@ define([
 ) {
     'use strict';
 
-    var errorMessage = $t('ERROR'),
+    var errorMessage = $t('Something went wrong. Please try again later.'),
         isLoading = ko.observable(false);
 
     return Component.extend({
@@ -50,7 +50,13 @@ define([
             /* default initialize */
             var valueFee = fee.allData().fee;
             var formatPrice = priceUtils.formatPrice(valueFee, quote.getPriceFormat());
-            this.getValueFee = ko.observable(formatPrice);
+            this.getValueFee = ko.observable(formatPrice)
+            this.getProjectTitle = ko.observable('');
+            this.getProjectUrl = ko.observable('');
+            if (fee.allData().project_id) {
+                this.getProjectTitle = ko.observable(this.getSelectedProject(fee.allData().project_id)['title']);
+                this.getProjectUrl = ko.observable(this.getSelectedProject(fee.allData().project_id)['url']);
+            }
 
             var self = this;
 
@@ -85,6 +91,9 @@ define([
                     formData['fee'] = this.source.get('predefinedFee');
                 }
 
+                if (this.source.get('predefinedProjects')) {
+                    formData['project'] = this.source.get('predefinedProjects');
+                }
                 applyFeeAction(formData, isLoading, function (isFeeAddSuccess) {
                     if (isFeeAddSuccess) {
                         var price;
@@ -92,6 +101,11 @@ define([
                         price = formData['fee'];
 
                         self.getValueFee(priceUtils.formatPrice(price, quote.getPriceFormat()));
+                        if (formData['project']) {
+                            self.getProjectTitle(self.getSelectedProject(formData['project'])['title']);
+                            self.getProjectUrl(self.getSelectedProject(formData['project'])['url']);
+                        }
+
                         self.showButtonAdd(false);
                         self.showButtonDelete(true);
                     } else {
@@ -119,6 +133,8 @@ define([
 
                 deleteFeeAction(formData, isLoading);
                 this.getValueFee(0);
+                this.getProjectTitle('');
+                this.getProjectUrl('');
                 this.showButtonAdd(true);
                 this.showButtonDelete(false);
             } else {
@@ -138,8 +154,12 @@ define([
                 isLoading(true);
                 var formData = [];
                 formData['fee'] = this.source.get('terravivesFeeForm');
+                formData['project'] = this.source.get('predefinedProjects');
+                console.log(formData);
 
                 this.getValueFee(0);
+                this.getProjectTitle('');
+                this.getProjectUrl('');
                 this.showButtonAdd(true);
                 this.showButtonDelete(false);
             } else {
@@ -158,6 +178,15 @@ define([
          */
         isFeeUse: function () {
             return fee.allData().is_fee_use;
+        },
+
+        /**
+         * Is fee use (has in session)
+         *
+         * @return bool
+         */
+        isProjectUse: function () {
+            return fee.allData().is_project_use;
         },
 
         /**
@@ -195,7 +224,19 @@ define([
          * @return {String}
          */
         getDefaultFee: function () {
-            return fee.allData().default_description_fee;
+            return fee.allData().fee_label;
+        },
+
+        /**
+         * Get default button label
+         * @returns {string}
+         */
+        getDefaultButtonLabel: function () {
+            return fee.allData().button_label;
+        },
+
+        getSelectedProject: function (id) {
+            return fee.allData().projects[id];
         },
 
         /**

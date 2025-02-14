@@ -32,7 +32,8 @@ define(
         'use strict';
         return function (formData, isLoading, isFeeAddSuccess) {
             var data = {
-                    'fee': formData['fee']
+                    'fee': formData['fee'],
+                    'project': formData['project']
                 },
                 successMessage = $t('Fee was successfully applied.'),
                 errorMessage = $t('Could not apply fee');

@@ -17,8 +17,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     const ENABLE_FEES                      = 'terravives_fees/main/enable_fees';
     const FEE_TAX_CALCULATION_INCLUDES_TAX = 'terravives_fees/main/tax_calculation_includes_tax';
-    const SHOW_FEES_ADMIN                  = 'terravives_fees/main/show_fees_admin';
     const DEFAULT_DESCRIPTION              = 'terravives_fees/main/default_description_fees';
+
+    const FEE_LABEL                        = 'terravives_fees/main/fee_input_label';
+
+    const PROJECT_LABEL                     = 'terravives_fees/main/project_input_label';
+
+    const BUTTON_LABEL                     = 'terravives_fees/main/button_text';
+
     const DEFAULT_OPTION                   = 'terravives_fees/main/default_option';
     const AMOUNT_PLACEHOLDER               = 'terravives_fees/main/fees_amount_placeholder';
     const ENABLE_PRODUCT_DATA              = 'terravives_fees/general/add_product_data';
@@ -121,6 +127,51 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return (string)$this->scopeConfig->getValue(
             self::DEFAULT_DESCRIPTION,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     *
+     * @param null|int $storeId
+     *
+     * @return string
+     */
+    public function getFeeLabel($storeId = null): string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::FEE_LABEL,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     *
+     * @param null|int $storeId
+     *
+     * @return string
+     */
+    public function getProjectLabel($storeId = null): string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::PROJECT_LABEL,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     *
+     * @param null|int $storeId
+     *
+     * @return string
+     */
+    public function getButtonLabel($storeId = null): string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::BUTTON_LABEL,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

@@ -19,7 +19,7 @@ class ProcessOrder implements  \Magento\Framework\Event\ObserverInterface
      * @var \Terravives\Fee\Logger\Logger
      */
     protected $_logger;
-    
+
     /**
      * @var SerializerInterface
      */
@@ -52,7 +52,7 @@ class ProcessOrder implements  \Magento\Framework\Event\ObserverInterface
         $order = $observer->getOrder();
         $orderData= [];
         $feeDetails = $order->getTerravivesFeeDetails();
-         
+
         try {
             if ($feeDetails) {
                 $feeDetails = $this->serializer->unserialize($feeDetails);
@@ -62,6 +62,11 @@ class ProcessOrder implements  \Magento\Framework\Event\ObserverInterface
                     "customer_name" => $order->getCustomerName(),
                     "customer_email" => $order->getCustomerEmail(),
                 ];
+
+                if (isset($feeDetails['project_id'])) {
+                    $orderData['project_id'] = $feeDetails['project_id'];
+                }
+
                 $hash = " ";
                 foreach ($feeDetails['compensations'] as $key => $value) {
                     if ($value['amount'] == $feeDetails['fee'] || (is_null($value['amount']) && $feeDetails['fee'] > 0))
@@ -73,13 +78,18 @@ class ProcessOrder implements  \Magento\Framework\Event\ObserverInterface
 
 
                 $resultCreateCompensationOrder = $this->apiHelper->createCompensationOrder( $orderData);
+                $this->_logger->info('Order create Compensation Order: ' . json_encode($resultCreateCompensationOrder));
+
                 $orderCheckOut = [
                     "order_uuid" => $resultCreateCompensationOrder['order_uuid'],
+                    "customer_email" => $order->getCustomerEmail(),
+                    "customer_name" => $order->getCustomerName() . ' ' . $order->getCustomerLastname(),
                 ];
 
-                $resultCreateCompensationOrder = $this->apiHelper->orderCheckout( $orderCheckOut);
+                $resultCheckout = $this->apiHelper->orderCheckout( $orderCheckOut);
+                $this->_logger->info('Order Checkout: ' . json_encode($orderCheckOut));
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_logger->error($e->getMessage());
         }
     }

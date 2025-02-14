@@ -133,14 +133,29 @@ class FeeData extends \Magento\Payment\Block\Form
 
         $storeId  = $this->_storeManager->getStore()->getId();
         $result['is_enable'] = $this->helperData->showFeesTab($storeId);
-        
+
         if (!isset($feeDetails['compensations'])) {
             $result['is_enable'] = false;
         }
 
+        $result['is_project_use'] = false;
+        $result['is_fee_use'] = false;
+
         if (isset($feeDetails['fee'])) {
             $result['fee']        = $this->helperPrice->convertToCurrentCurrency($feeDetails['fee']);
             $result['is_fee_use']         = ($result['fee'] > 0);
+        }
+
+        if (isset($feeDetails['project_id'])) {
+            $result['project_id'] = $feeDetails['project_id'];
+        }
+
+        if (isset($feeDetails['projects'])) {
+            $projects = [];
+            foreach ($feeDetails['projects'] as $key => $project) {
+                $projects[$project['id']] = $project;
+            }
+            $result['projects'] = $projects;
         }
 
         $result['url']                       = $this->getUrl('fees/checkout/fee');
@@ -148,6 +163,7 @@ class FeeData extends \Magento\Payment\Block\Form
             : $this->getIsDisplayTitle();
         $result['is_enable_fees']            = $result['is_enable'];
         $result['default_description_fee']   = $this->helperData->getDefaultDescription($storeId);
+        $result['button_label']              = $this->helperData->getButtonLabel($storeId);
         $result['price_format']              = $this->localeFormat->getPriceFormat(
             null,
             $this->helperFee->getQuote()->getQuoteCurrencyCode()

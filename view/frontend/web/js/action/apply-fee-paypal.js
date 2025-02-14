@@ -1,6 +1,6 @@
 /**
  * Copyright © Terravives. All rights reserved.
- 
+
  */
 
 define(
@@ -21,7 +21,8 @@ define(
         'use strict';
         return function (formData, isLoading) {
             var data = {
-                    'fee': formData['fee']
+                    'fee': formData['fee'],
+                    'project': formData['project']
                 },
                 errorMessage = $t('Could not apply fee');
 

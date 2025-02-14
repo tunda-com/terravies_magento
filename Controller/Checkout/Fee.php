@@ -123,7 +123,6 @@ class Fee extends \Magento\Checkout\Controller\Cart
     public function execute()
     {
         $data = $this->getRequest()->getParams();
-
         /* if press button deleteFee or unchecked round up*/
         $isDelete = $this->deleteFee();
         if ($isDelete) {
@@ -154,7 +153,6 @@ class Fee extends \Magento\Checkout\Controller\Cart
 
             return true;
         }
-
         return false;
     }
 
@@ -186,6 +184,10 @@ class Fee extends \Magento\Checkout\Controller\Cart
         $currentData = $this->modelFee->getQuoteDetailsFee();
 
         $currentData['fee'] = $fee;
+        if (!empty($data['project'])) {
+            $currentData['project_id'] = $data['project'];
+        }
+
         $this->modelFee->addFeeToQuote($currentData);
         $cartQuote = $this->cart->getQuote();
         $cartQuote->collectTotals();
