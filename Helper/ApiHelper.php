@@ -163,7 +163,7 @@ class ApiHelper extends AbstractHelper
         return $curlOptions;
     }
 
-    private function executeCurlRequest(array $curlOptions): mixed
+    private function executeCurlRequest(array $curlOptions)
     {
         $curlHandle = curl_init();
 
