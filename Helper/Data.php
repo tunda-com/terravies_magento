@@ -230,4 +230,66 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return $this->httpRequest->getFullActionName() == 'paypal_express_review';
     }
+
+    /**
+     * Check if tax should be shown separately
+     *
+     * @param null $storeId
+     * @return bool
+     */
+    public function showTaxSeparately($storeId = null)
+    {
+        return (bool)$this->scopeConfig->getValue(
+            'terravives_fees/tax_settings/show_tax_separately',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * Get tax percentage
+     *
+     * @param null $storeId
+     * @return float
+     */
+    public function getTaxPercentage($storeId = null)
+    {
+        $percentage = $this->scopeConfig->getValue(
+            'terravives_fees/tax_settings/tax_percentage',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+
+        return (float)$percentage;
+    }
+
+    /**
+     * Calculate fee amounts with tax
+     *
+     * @param float $totalAmount
+     * @param null $storeId
+     * @return array ['base_fee' => float, 'tax_amount' => float, 'total_fee' => float]
+     */
+    public function calculateFeeWithTax($totalAmount, $storeId = null)
+    {
+        if (!$this->showTaxSeparately($storeId)) {
+            return [
+                'base_fee' => $totalAmount,
+                'tax_amount' => 0,
+                'total_fee' => $totalAmount
+            ];
+        }
+
+        $taxPercentage = $this->getTaxPercentage($storeId);
+
+        // Calculate base fee (amount without tax)
+        $baseFee = $totalAmount / (1 + ($taxPercentage / 100));
+        $taxAmount = $totalAmount - $baseFee;
+
+        return [
+            'base_fee' => round($baseFee, 2),
+            'tax_amount' => round($taxAmount, 2),
+            'total_fee' => $totalAmount
+        ];
+    }
 }

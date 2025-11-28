@@ -81,6 +81,22 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
+            <group id="tax_settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Tax Settings</label>
+                <field id="show_tax_separately" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Tax Separately</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Display fee and tax as separate line items</comment>
+                </field>
+                <field id="tax_percentage" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tax Percentage</label>
+                    <validate>validate-number validate-zero-or-greater validate-number-range number-range-0-100</validate>
+                    <comment>Enter tax percentage (e.g., 22 for 22%)</comment>
+                    <depends>
+                        <field id="show_tax_separately">1</field>
+                    </depends>
+                </field>
+            </group>
         </section>
     </system>
 </config>

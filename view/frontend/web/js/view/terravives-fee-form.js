@@ -48,11 +48,12 @@ define([
             this.showButtonDelete = ko.observable(!this.defaultShowButtonAdd());
 
             /* default initialize */
-            var valueFee = fee.allData().fee;
+            var valueFee = this.getFullFeeValue();
             var formatPrice = priceUtils.formatPrice(valueFee, quote.getPriceFormat());
-            this.getValueFee = ko.observable(formatPrice)
+            this.getValueFee = ko.observable(formatPrice);
             this.getProjectTitle = ko.observable('');
             this.getProjectUrl = ko.observable('');
+
             if (fee.allData().project_id) {
                 this.getProjectTitle = ko.observable(this.getSelectedProject(fee.allData().project_id)['title']);
                 this.getProjectUrl = ko.observable(this.getSelectedProject(fee.allData().project_id)['url']);
@@ -62,7 +63,7 @@ define([
 
             quote.totals.subscribe(function () {
                 if (totals.getSegment('terravives_fee')) {
-                    valueFee = totals.getSegment('terravives_fee')['value'];
+                    valueFee = self.getFullFeeValue();
                     formatPrice = priceUtils.formatPrice(valueFee, quote.getPriceFormat());
                     self.getValueFee(formatPrice);
                 }
@@ -72,6 +73,22 @@ define([
         },
 
         isLoading: isLoading,
+
+        /**
+         * Get full fee value (base + tax)
+         *
+         * @returns {number}
+         */
+        getFullFeeValue: function () {
+            var fullValue = 0;
+
+            if (totals.getSegment('terravives_fee')) {
+                var segment = totals.getSegment('terravives_fee');
+                fullValue = segment.value || 0;
+            }
+
+            return fullValue;
+        },
 
         /**
          * Form submit add fee
@@ -96,11 +113,9 @@ define([
                 }
                 applyFeeAction(formData, isLoading, function (isFeeAddSuccess) {
                     if (isFeeAddSuccess) {
-                        var price;
+                        var fullPrice = self.getFullFeeValue();
+                        self.getValueFee(priceUtils.formatPrice(fullPrice, quote.getPriceFormat()));
 
-                        price = formData['fee'];
-
-                        self.getValueFee(priceUtils.formatPrice(price, quote.getPriceFormat()));
                         if (formData['project']) {
                             self.getProjectTitle(self.getSelectedProject(formData['project'])['title']);
                             self.getProjectUrl(self.getSelectedProject(formData['project'])['url']);

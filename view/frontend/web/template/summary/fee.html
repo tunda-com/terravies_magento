@@ -1,18 +1,34 @@
-<!--
-/**
- * Copyright © Terravives. All rights reserved.
- * See LICENSE.txt for license details.
- */
--->
-
 <!-- ko if: isDisplayed() -->
-<tr class="totals-terravives-fee-summary"
-    data-bind="mageInit: {'toggleAdvanced':{'selectorsToggleClass': 'shown', 'baseToggleClass': 'expanded', 'toggleContainers': ''}}">
-    <th data-bind="text: title" class="mark" scope="row"></th>
-    <td data-bind="attr: {'data-th': title }" class="amount">
-                <span class="price"
-                      data-bind="text: getValue()"></span>
+<!-- ko if: showTaxSeparately() -->
+<!-- Base Fee Line -->
+<tr class="totals fee" style="border-top: 1px solid #ccc;">
+    <th class="mark" scope="row" style="padding-top: 12px;">
+        <span class="label" data-bind="text: title"></span>
+    </th>
+    <td class="amount" style="padding-top: 12px;">
+        <span class="price" data-bind="text: getBaseFeeValue()"></span>
     </td>
 </tr>
+<!-- Tax Line -->
+<tr class="totals fee-tax">
+    <th class="mark" scope="row">
+        <span class="label" data-bind="text: getTaxTitle()" style="font-size: 0.95em;"></span>
+    </th>
+    <td class="amount">
+        <span class="price" data-bind="text: getTaxValue()" style="font-size: 0.95em;"></span>
+    </td>
+</tr>
+<!-- /ko -->
 
+<!-- ko ifnot: showTaxSeparately() -->
+<!-- Single Fee Line -->
+<tr class="totals fee" style="border-top: 2px solid #ccc;">
+    <th class="mark" scope="row" style="padding-top: 12px;">
+        <span class="label" data-bind="text: title"></span>
+    </th>
+    <td class="amount" style="padding-top: 12px;">
+        <span class="price" data-bind="text: getValue()"></span>
+    </td>
+</tr>
+<!-- /ko -->
 <!-- /ko -->

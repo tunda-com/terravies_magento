@@ -44,7 +44,7 @@
                                                 <item name="totals" xsi:type="array">
                                                     <item name="children" xsi:type="array">
                                                         <item name="terravives_fee" xsi:type="array">
-                                                            <item name="sortOrder" xsi:type="string">35</item>
+                                                            <item name="sortOrder" xsi:type="string">45</item>
                                                             <item name="component" xsi:type="string">Terravives_Fee/js/view/summary/fee</item>
                                                             <item name="config" xsi:type="array">
                                                                 <item name="title" xsi:type="string" translate="true">Fee</item>

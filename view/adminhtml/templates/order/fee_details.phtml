@@ -7,30 +7,54 @@
 /** @var Terravives\Fee\Block\Adminhtml\Order\View\Info $block */
 ?>
 
-<?php
-if ($fee = $block->getFeeDetails()) : ?>
+<?php if ($fee = $block->getFeeDetails()) : ?>
     <br><br>
-    <div class="admin__page-section-title"><span class="title"><?= $block->escapeHtml(__('Fees')) ?></span></div>
-    <div id="order-fee-details" class="admin__page-section-item">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Compensation')) ?></span>
+    </div>
+    <div id="order-fee-details" class="admin__page-section-item order-fee-details">
         <div class="admin__page-section-item-content">
-            <table>
+            <table class="admin__table-secondary order-fee-table">
+                <tbody>
                 <?php if ($fee['has_project']) : ?>
                     <tr>
+                        <th><?= $block->escapeHtml(__('Project')) ?>:</th>
                         <td>
-                            <a href="<?= $fee['project_url'] ?>" target="_blank">
-                                <?= $block->escapeHtml($fee['project_title']); ?>
+                            <a href="<?= $block->escapeUrl($fee['project_url']) ?>" target="_blank">
+                                <?= $block->escapeHtml($fee['project_title']) ?>
                             </a>
                         </td>
                     </tr>
                 <?php endif; ?>
-                <tr>
-                    <td>
-                        <strong><?= $block->escapeHtml($fee['fee_title']); ?></strong>
-                        <?= $block->escapeHtml($fee['fee_value']); ?>
-                    </td>
-                </tr>
+
+                <?php if ($fee['show_tax_separately']) : ?>
+                    <!-- Show separate lines for base fee, tax, and total -->
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Fee Amount (excl. Tax)')) ?>:</th>
+                        <td><strong><?= $block->escapeHtml($fee['base_fee']) ?></strong></td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('Fee Tax')) ?>
+                            <?php if (!empty($fee['tax_percentage'])) : ?>
+                                (<?= $block->escapeHtml($fee['tax_percentage']) ?>%)
+                            <?php endif; ?>:
+                        </th>
+                        <td><strong><?= $block->escapeHtml($fee['tax_amount']) ?></strong></td>
+                    </tr>
+                    <tr class="fee-total-row">
+                        <th><?= $block->escapeHtml(__('Total Fee Amount (incl. Tax)')) ?>:</th>
+                        <td><strong><?= $block->escapeHtml($fee['total_fee']) ?></strong></td>
+                    </tr>
+                <?php else : ?>
+                    <!-- Show single line for total fee -->
+                    <tr>
+                        <th><?= $block->escapeHtml($fee['fee_title']) ?>:</th>
+                        <td><strong><?= $block->escapeHtml($fee['fee_value']) ?></strong></td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
             </table>
         </div>
     </div>
-<?php
-endif; ?>
+<?php endif; ?>

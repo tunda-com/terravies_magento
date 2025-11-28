@@ -107,14 +107,64 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         $basePrice = 0;
 
         if (!empty($feeDetails['fee'])) {
-            $basePrice                               = $feeDetails['fee'];
+            $basePrice = $feeDetails['fee'];
         }
 
-        $terravivesFeeAmount     = $this->priceCurrency->convertAndRound($basePrice, $quote->getStore());
-        $baseTerravivesFeeAmount = $this->priceCurrency->round($basePrice);
+        $storeId = $quote->getStoreId();
 
-        $this->addPricesToAddress($total, $address, $terravivesFeeAmount);
-        $this->addBasePricesToAddress($total, $address, $baseTerravivesFeeAmount);
+        // Calculate fee with tax breakdown
+        $feeCalculation = $this->helperData->calculateFeeWithTax($basePrice, $storeId);
+
+        // Store tax information in fee details for frontend display
+        $feeDetails['show_tax_separately'] = $this->helperData->showTaxSeparately($storeId);
+        $feeDetails['tax_amount'] = $feeCalculation['tax_amount'];
+        $feeDetails['base_fee_amount'] = $feeCalculation['base_fee'];
+        $feeDetails['tax_percentage'] = $this->helperData->getTaxPercentage($storeId);
+        $feeDetails['total_fee'] = $feeCalculation['total_fee'];
+
+        if ($this->helperData->showTaxSeparately($storeId)) {
+            // When showing separately, add base fee and tax separately
+            $terravivesFeeAmount     = $this->priceCurrency->convertAndRound($feeCalculation['base_fee'], $quote->getStore());
+            $baseTerravivesFeeAmount = $this->priceCurrency->round($feeCalculation['base_fee']);
+
+            $terravivesFeeTax     = $this->priceCurrency->convertAndRound($feeCalculation['tax_amount'], $quote->getStore());
+            $baseTerravivesFeeTax = $this->priceCurrency->round($feeCalculation['tax_amount']);
+
+            // Store fee amounts (for display and saving to order)
+            $total->setTerravivesFeeAmount($terravivesFeeAmount);
+            $address->setTerravivesFeeAmount($terravivesFeeAmount);
+            $total->setBaseTerravivesFeeAmount($baseTerravivesFeeAmount);
+            $address->setBaseTerravivesFeeAmount($baseTerravivesFeeAmount);
+
+            // Store tax amounts (for display and saving to order)
+            $total->setTerravivesFeeTax($terravivesFeeTax);
+            $address->setTerravivesFeeTax($terravivesFeeTax);
+            $total->setBaseTerravivesFeeTax($baseTerravivesFeeTax);
+            $address->setBaseTerravivesFeeTax($baseTerravivesFeeTax);
+
+            // Add base fee to totals (this adds to grand total automatically)
+            $total->setTotalAmount('terravives_fee', $terravivesFeeAmount);
+            $total->setBaseTotalAmount('terravives_fee', $baseTerravivesFeeAmount);
+
+            // Manually add tax to grand total (not to Magento's tax line, just to grand total)
+            $total->addTotalAmount('terravives_fee', $terravivesFeeTax);
+            $total->addBaseTotalAmount('terravives_fee', $baseTerravivesFeeTax);
+        } else {
+            // When not separating, add the full amount
+            $terravivesFeeAmount     = $this->priceCurrency->convertAndRound($basePrice, $quote->getStore());
+            $baseTerravivesFeeAmount = $this->priceCurrency->round($basePrice);
+
+            // Store fee amounts
+            $total->setTerravivesFeeAmount($terravivesFeeAmount);
+            $address->setTerravivesFeeAmount($terravivesFeeAmount);
+            $total->setBaseTerravivesFeeAmount($baseTerravivesFeeAmount);
+            $address->setBaseTerravivesFeeAmount($baseTerravivesFeeAmount);
+
+            // Add to totals (this adds to grand total automatically)
+            $total->setTotalAmount('terravives_fee', $terravivesFeeAmount);
+            $total->setBaseTotalAmount('terravives_fee', $baseTerravivesFeeAmount);
+        }
+
         $this->addFeeDetailsToAddress($total, $address, $feeDetails);
 
         $this->isCollected = true;
@@ -143,13 +193,14 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         }
 
         $feeDetails = $address->getTerravivesFeeDetails();
+        $feeDetailsArray = $feeDetails ? $this->serializer->unserialize($feeDetails) : [];
 
         if ($address->getTerravivesFeeAmount() && $feeDetails) {
             return [
                 'code'                      => $this->getCode(),
                 'title'                     => __('Fee'),
                 'value'                     => $address->getTerravivesFeeAmount(),
-                'terravives_fee_details' => $this->serializer->unserialize($feeDetails)
+                'terravives_fee_details'    => $feeDetailsArray
             ];
         }
 
@@ -188,42 +239,6 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         $feeData = empty($feeData) ? '' : $this->serializer->serialize($feeData);
         $address->setTerravivesFeeDetails($feeData);
         $total->setTerravivesFeeDetails($feeData);
-
-        return $this;
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Address\Total $total
-     * @param \Magento\Quote\Model\Quote\Address $address
-     * @param double $terravivesFeeAmount
-     *
-     * @return $this
-     */
-    protected function addPricesToAddress($total, $address, $terravivesFeeAmount)
-    {
-        $total->setTerravivesFeeAmount($terravivesFeeAmount);
-        $total->setTotalAmount('terravives_fee', $terravivesFeeAmount);
-
-        $address->setTerravivesFeeAmount($terravivesFeeAmount);
-        $address->setTotalAmount('terravives_fee', $terravivesFeeAmount);
-
-        return $this;
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Address\Total $total
-     * @param \Magento\Quote\Model\Quote\Address $address
-     * @param float $baseTerravivesFeeAmount
-     *
-     * @return $this
-     */
-    protected function addBasePricesToAddress($total, $address, $baseTerravivesFeeAmount)
-    {
-        $total->setBaseTerravivesFeeAmount($baseTerravivesFeeAmount);
-        $total->setBaseTotalAmount('terravives_fee', $baseTerravivesFeeAmount);
-
-        $address->setBaseTerravivesFeeAmount($baseTerravivesFeeAmount);
-        $address->setBaseTotalAmount('terravives_fee', $baseTerravivesFeeAmount);
 
         return $this;
     }

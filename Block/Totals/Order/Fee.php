@@ -53,7 +53,7 @@ class Fee extends \Magento\Sales\Block\Order\Totals
         $totalsBlock = $this->getParentBlock();
         $order       = $totalsBlock->getOrder();
 
-        $label = __('Fee');
+        $label = __('Fee (Tax Incl.)');
 
         if ($order->getTerravivesFeeDetails()) {
             $feeDetails = $this->serializer->unserialize($order->getTerravivesFeeDetails());

@@ -9,8 +9,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Sales:etc/sales.xsd">
     <section name="quote">
         <group name="totals">
-            <item name="terravives_fee" instance="Terravives\Fee\Model\Total\Quote\Fee" sort_order="500"/>
-            <!--<item name="terravives_fees_tax" instance="Terravives\Fee\Model\Total\Quote\Fee\Tax" sort_order="620"/> -->
+            <item name="terravives_fee" instance="Terravives\Fee\Model\Total\Quote\Fee" sort_order="450"/>
         </group>
     </section>
     <section name="order_invoice">
